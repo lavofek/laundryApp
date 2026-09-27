@@ -1,0 +1,9 @@
+# CLion / JetBrains
+.idea/
+cmake-build-*/
+
+#macOS
+.DS_Store
+
+#Runtime data
+family_data.txt
