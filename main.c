@@ -3,26 +3,24 @@
 #include "family.h"
 #include "storage.h"
 
+//constants
 #define FAMILY_SIZE 5
+#define MAX_FAMILY_SIZE 20
+#define MAX_NAME_SIZE 11
 
 int main(void) {
     //vars
     int mainSelect = 0;
-    struct FamilyMember myFamily[FAMILY_SIZE] = {
-        {.name = "Ofek", .laundryReady = false},
-        {.name = "Ohad", .laundryReady = false},
-        {.name = "Liat", .laundryReady = false},
-        {.name = "Lahav", .laundryReady = false},
-        {.name = "Assaf", .laundryReady = false}
-    };
-
-    loadFamily(myFamily, FAMILY_SIZE, "family_data.txt");
+    int familySize = 0;
+    struct FamilyMember myFamily[FAMILY_SIZE];
+    loadFamily(myFamily, &familySize, "family_data.txt", MAX_NAME_SIZE);
 
     //main screen
     while (1){
         printf("\nLaundry Manager:\nPlease select an option:\n");
         printf("1. View family members\n2. Mark laundry as ready\n"
-            "3. Collect laundry\n4. Exit\n");
+            "3. Collect laundry\n4. Add family members\n"
+            "5. Remove family members\n6. Exit\n");
         if (scanf(" %d", &mainSelect) != 1) {
             printf("Invalid input\n");
             while (getchar() != '\n');
@@ -32,27 +30,39 @@ int main(void) {
         switch (mainSelect) {
             case 1:
                 printf("\nView family members\n");
-                viewFamily(myFamily, FAMILY_SIZE);
+                viewFamily(myFamily, familySize);
                 break;
 
             case 2:
                 printf("\nMark laundry as ready\nWhose laundry is ready?\n");
-                if (markLaundryReady(myFamily, FAMILY_SIZE) == -1) break;
-                saveFamily(myFamily, FAMILY_SIZE, "family_data.txt");
+                if (markLaundryReady(myFamily, familySize) == -1) break;
+                saveFamily(myFamily, familySize, "family_data.txt");
                 break;
 
             case 3:
                 printf("\nCollect laundry\nWhose laundry is collected?\n");
-                if (collectLaundry(myFamily, FAMILY_SIZE) == -1) break;
-                saveFamily(myFamily, FAMILY_SIZE, "family_data.txt");
+                if (collectLaundry(myFamily, familySize) == -1) break;
+                saveFamily(myFamily, familySize, "family_data.txt");
                 break;
 
             case 4:
+                printf("\nAdd a family member\n");
+                addFamilyMember(myFamily, &familySize, MAX_NAME_SIZE);
+                saveFamily(myFamily, familySize, "family_data.txt");
+                break;
+
+            case 5:
+                printf("\nRemove a family member\n");
+                removeFamilyMember(myFamily, &familySize, MAX_NAME_SIZE);
+                saveFamily(myFamily, familySize, "family_data.txt");
+                break;
+
+            case 6:
                 printf("\nExit\n");
                 return 0;
 
             default:
-                printf("Invalid option\n");
+                printf("\nInvalid option\n");
                 break;
         }
     }

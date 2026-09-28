@@ -7,6 +7,7 @@
 #include "family.h"
 
 int saveFamily(struct FamilyMember family[], int size, const char *location);
-int loadFamily(struct FamilyMember family[], int size, const char *location);
+int loadFamily(struct FamilyMember family[], int *size, const char *location,
+    int nameSize);
 
 #endif //LAUNDRYAPP_STORAGE_H

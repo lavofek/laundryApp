@@ -12,7 +12,7 @@ int saveFamily(struct FamilyMember family[], int size, const char *location) {
         printf("Failed to open file\n");
         return -1;
     }
-
+    fprintf(file, "%d\n", size);
     for (int i = 0; i < size; i++) {
         fprintf(file, "%s,%d\n",
             family[i].name,
@@ -23,19 +23,22 @@ int saveFamily(struct FamilyMember family[], int size, const char *location) {
     return 0;
 }
 
-int loadFamily(struct FamilyMember family[], int size, const char *location) {
+int loadFamily(struct FamilyMember family[], int *size, const char *location,
+    int nameSize) {
     FILE *file = fopen(location, "r");
     if (file == NULL) {
         printf("Failed to open file/File doesn't exist\n");
-        return -1;
+        printf("New file created.\n");
+        return 0;
     }
-
-    for (int i = 0; i < size; i++) {
-        char name[30];
-
+    fscanf(file, "%d", size);
+    for (int i = 0;; i++) {
+        char name[nameSize];
         int laundryReady;
-        if (fscanf(file, " %29[^,],%d", name, &laundryReady) != 2){
-            printf("Invalid data in file\n");
+        int result = fscanf(file, " %9[^,],%d", name, &laundryReady);
+        if (result == EOF) break;
+        if (result != 2){
+            if (name[1] != ' ') printf("Invalid data in file\n");
             fclose(file);
             return -1;
         }
@@ -46,4 +49,3 @@ int loadFamily(struct FamilyMember family[], int size, const char *location) {
     fclose(file);
     return 0;
 }
-
